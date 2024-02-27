@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
 
         thread(start = true){
-            val url = URL("https://open.api.nexon.com/maplestory/v1/character/basic?ocid=a5d847df5c0bb31fd02da27f71067173&date=2024-02-27")
+            val url = URL("https://open.api.nexon.com/maplestory/v1/character/ability?ocid=a5d847df5c0bb31fd02da27f71067173&date=2024-02-27")
 
             val httpURLConnection = url.openConnection() as HttpURLConnection
             httpURLConnection.requestMethod = "GET"
@@ -51,9 +51,24 @@ class MainActivity : AppCompatActivity() {
 
             val root =JSONObject(data)
 
-            //val itemArray = root.getJSONArray("ability_info")
+            val itemArray = root.getJSONArray("ability_info")
 
-            Log.d("ccccname", root.getString("character_name").toString())
+            for (idx in 0 until itemArray.length()) {
+
+                // items의 기사들은 {}로 감싸져있기에 getJSONObject 이용해 idx 번째 JSONObject를 추출한다
+                val itemObject = itemArray.getJSONObject(idx)
+                // 원하는 데이터들을 추출한다
+                val ability_no = itemObject.getString("ability_no")
+                val ability_grade = itemObject.getString("ability_grade")
+                val ability_value = itemObject.getString("ability_value")
+
+                Log.d("ability_info", ability_no.toString())
+                Log.d("ability_info", ability_grade.toString())
+                Log.d("ability_info", ability_value.toString())
+
+            }
+
+            Log.d("remain_fame",root.getString("remain_fame").toString())
 
 
         } // thread의 "}"
